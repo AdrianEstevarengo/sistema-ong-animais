@@ -1,0 +1,23 @@
+{% extends 'painel/base.html' %}
+{% block titulo %}{% if atendimento %}Editar{% else %}Novo{% endif %} atendimento{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-4">{% if atendimento %}Editar atendimento{% else %}Novo atendimento{% endif %}</h1>
+<form method="post" class="card shadow-sm"><div class="card-body">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="row g-3">
+        {% for field in form %}
+        <div class="{% if field.name == 'descricao' %}col-12{% else %}col-md-6{% endif %}">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+            {{ field }}
+            {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+            {% for e in field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mt-4 d-flex gap-2">
+        <button class="btn btn-success">Salvar</button>
+        <a href="{% url 'atendimento_lista' %}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</div></form>
+{% endblock %}

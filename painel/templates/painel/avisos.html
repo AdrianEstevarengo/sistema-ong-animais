@@ -1,0 +1,22 @@
+{% extends 'painel/base.html' %}
+{% block titulo %}Avisos de doses{% endblock %}
+{% block conteudo %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+    <h1 class="h3 mb-0">💉 Avisos de vacinas e vermífugos</h1>
+    <form method="get" class="d-flex align-items-center gap-2">
+        <label for="dias" class="text-nowrap">Mostrar o que vence em até</label>
+        <select name="dias" id="dias" class="form-select form-select-sm" onchange="this.form.submit()">
+            {% for d in opcoes_dias %}
+            <option value="{{ d }}" {% if dias == d %}selected{% endif %}>{{ d }} dias</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+<p class="text-muted">Hoje: {{ hoje|date:'d/m/Y' }}. Animais adotados não aparecem aqui. Quando a dose for aplicada, registre a nova aplicação no animal e o aviso some.</p>
+
+<h2 class="h5 text-danger mt-4">Atrasados ({{ atrasados|length }})</h2>
+{% include 'painel/_tabela_avisos.html' with lista=atrasados vazio='Nenhuma dose atrasada. 🎉' %}
+
+<h2 class="h5 text-warning mt-4">Vencendo nos próximos {{ dias }} dias ({{ proximos|length }})</h2>
+{% include 'painel/_tabela_avisos.html' with lista=proximos vazio='Nada vencendo nesse período.' %}
+{% endblock %}
