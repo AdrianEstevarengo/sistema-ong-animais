@@ -40,7 +40,9 @@
         </div>
 
         <div class="col-md-3">
-            <button type="submit" class="btn btn-success w-100">Filtrar</button>
+            <button type="submit" class="btn btn-success w-100">
+                Filtrar
+            </button>
         </div>
     </form>
 
@@ -48,20 +50,30 @@
         {% for animal in animais %}
         <div class="col-md-4">
             <div class="card h-100 shadow-sm">
+
                 {% if animal.foto %}
-                <img src="{{ animal.foto.url }}" class="card-img-top"
-                     style="height: 220px; object-fit: cover;" alt="{{ animal.nome }}">
+                <img src="{{ animal.foto.url }}"
+                     class="card-img-top"
+                     style="height: 220px; object-fit: cover;"
+                     alt="{{ animal.nome }}">
                 {% endif %}
 
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ animal.nome }}</h5>
+
                     <p class="card-text">
                         Espécie: {{ animal.especie }}<br>
                         Raça: {{ animal.raca }}<br>
                         Porte: {{ animal.porte }}<br>
                         Situação: {{ animal.status }}
                     </p>
+
+                    <a href="{% url 'detalhe_animal' animal.id %}"
+                       class="btn btn-success mt-auto">
+                        Ver detalhes
+                    </a>
                 </div>
+
             </div>
         </div>
         {% empty %}

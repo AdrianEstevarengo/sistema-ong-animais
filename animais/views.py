@@ -1,4 +1,5 @@
-from django.shortcuts import render
+
+from django.shortcuts import render, get_object_or_404
 from .models import Animal
 
 
@@ -20,4 +21,12 @@ def lista_animais(request):
 
     return render(request, 'animais/lista.html', {
         'animais': animais
+    })
+
+
+def detalhe_animal(request, animal_id):
+    animal = get_object_or_404(Animal, id=animal_id)
+
+    return render(request, 'animais/detalhe.html', {
+        'animal': animal
     })
