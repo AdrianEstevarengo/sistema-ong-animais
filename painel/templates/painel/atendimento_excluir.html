@@ -1,0 +1,13 @@
+{% extends 'painel/base.html' %}
+{% block titulo %}Excluir atendimento{% endblock %}
+{% block conteudo %}
+<div class="card shadow-sm"><div class="card-body">
+    <h1 class="h4">Excluir atendimento?</h1>
+    <p>Você vai excluir <strong>{{ atendimento }}</strong>. Isso não pode ser desfeito.</p>
+    <form method="post" class="d-flex gap-2">
+        {% csrf_token %}
+        <button class="btn btn-danger">Sim, excluir</button>
+        <a href="{% url 'atendimento_lista' %}" class="btn btn-outline-secondary">Cancelar</a>
+    </form>
+</div></div>
+{% endblock %}

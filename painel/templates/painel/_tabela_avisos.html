@@ -1,0 +1,25 @@
+<div class="table-responsive">
+<table class="table table-sm table-hover bg-white shadow-sm align-middle">
+    <thead class="table-light">
+        <tr><th>Animal</th><th>Espécie</th><th>Dose</th><th>Última aplicação</th><th>Próxima dose</th><th>Prazo</th></tr>
+    </thead>
+    <tbody>
+    {% for v in lista %}
+        <tr>
+            <td><strong>{{ v.animal.nome }}</strong></td>
+            <td>{{ v.animal.especie }}</td>
+            <td>{{ v.nome }}</td>
+            <td>{{ v.data_aplicacao|date:'d/m/Y' }}</td>
+            <td>{{ v.proxima_dose|date:'d/m/Y' }}</td>
+            <td>
+                {% if v.dias < 0 %}<span class="badge bg-danger">{{ v.atraso }} dia(s) de atraso</span>
+                {% elif v.dias == 0 %}<span class="badge bg-warning text-dark">Hoje</span>
+                {% else %}<span class="badge bg-warning text-dark">em {{ v.dias }} dia(s)</span>{% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="6" class="text-muted">{{ vazio }}</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>

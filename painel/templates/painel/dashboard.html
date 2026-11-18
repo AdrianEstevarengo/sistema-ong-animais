@@ -1,0 +1,105 @@
+{% extends 'painel/base.html' %}
+{% block titulo %}Painel{% endblock %}
+{% block conteudo %}
+<h1 class="h3 mb-4">Painel geral</h1>
+
+{% if total_avisos %}
+<a href="{% url 'avisos' %}" class="text-decoration-none">
+    <div class="alert {% if avisos.atrasados %}alert-danger{% else %}alert-warning{% endif %} d-flex justify-content-between align-items-center">
+        <span>
+            💉 <strong>{{ avisos.atrasados|length }}</strong> dose(s) atrasada(s) e
+            <strong>{{ avisos.proximos|length }}</strong> vencendo nos próximos {{ avisos.dias }} dias.
+        </span>
+        <span class="btn btn-sm btn-light">Ver avisos</span>
+    </div>
+</a>
+{% endif %}
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-sm h-100"><div class="card-body">
+            <div class="card-rotulo">Animais sob cuidado</div>
+            <div class="card-numero text-success">{{ no_abrigo }}</div>
+            <small class="text-muted">{{ total_animais }} cadastrados no total</small>
+        </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-sm h-100"><div class="card-body">
+            <div class="card-rotulo">Disponíveis p/ adoção</div>
+            <div class="card-numero text-primary">{{ disponiveis }}</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-sm h-100"><div class="card-body">
+            <div class="card-rotulo">Em tratamento</div>
+            <div class="card-numero text-warning">{{ em_tratamento }}</div>
+        </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card shadow-sm h-100"><div class="card-body">
+            <div class="card-rotulo">Adotados</div>
+            <div class="card-numero text-secondary">{{ adotados }}</div>
+        </div></div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-4">
+        <div class="card shadow-sm h-100"><div class="card-body">
+            <div class="card-rotulo">Atendimentos neste mês</div>
+            <div class="card-numero">{{ atendimentos_mes }}</div>
+            <small class="text-muted">Custo no mês: R$ {{ custo_mes|floatformat:2 }}</small>
+        </div></div>
+    </div>
+    <div class="col-6 col-lg-4">
+        <div class="card shadow-sm h-100"><div class="card-body">
+            <div class="card-rotulo">Atendimentos em andamento</div>
+            <div class="card-numero">{{ atendimentos_andamento }}</div>
+        </div></div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="card shadow-sm h-100"><div class="card-body">
+            <div class="card-rotulo mb-2">Animais por espécie</div>
+            {% for e in por_especie %}
+            <div class="d-flex justify-content-between"><span>{{ e.especie }}</span><strong>{{ e.total }}</strong></div>
+            {% empty %}<small class="text-muted">Nenhum animal cadastrado.</small>{% endfor %}
+        </div></div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <strong>Últimos atendimentos</strong>
+                <a href="{% url 'atendimento_novo' %}" class="btn btn-sm btn-success">+ Novo</a>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for a in ultimos_atendimentos %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>{{ a.data|date:'d/m' }} · {{ a.tipo }} · {{ a.nome_animal|default:a.especie|default:'—' }}</span>
+                    <span class="badge {% if a.situacao == 'Concluído' %}bg-secondary{% else %}bg-info text-dark{% endif %}">{{ a.situacao }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">Nenhum atendimento registrado.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white"><strong>Últimos animais cadastrados</strong></div>
+            <ul class="list-group list-group-flush">
+                {% for an in ultimos_animais %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>{{ an.nome }} <small class="text-muted">({{ an.especie }})</small></span>
+                    <span class="badge bg-light text-dark border">{{ an.status }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">Nenhum animal cadastrado.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

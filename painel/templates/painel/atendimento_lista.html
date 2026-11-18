@@ -1,0 +1,56 @@
+{% extends 'painel/base.html' %}
+{% block titulo %}Atendimentos{% endblock %}
+{% block conteudo %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Atendimentos e ajudas</h1>
+    <a href="{% url 'atendimento_novo' %}" class="btn btn-success">+ Novo atendimento</a>
+</div>
+<p class="text-muted">Animais que a ONG ajudou sem acolher no abrigo (castrações, consultas, doações, resgates...).</p>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-5"><input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Buscar por animal, responsável, local..."></div>
+    <div class="col-md-3">
+        <select name="tipo" class="form-select">
+            <option value="">Todos os tipos</option>
+            {% for valor, rotulo in tipos %}<option value="{{ valor }}" {% if request.GET.tipo == valor %}selected{% endif %}>{{ rotulo }}</option>{% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2">
+        <select name="situacao" class="form-select">
+            <option value="">Todas</option>
+            {% for valor, rotulo in situacoes %}<option value="{{ valor }}" {% if request.GET.situacao == valor %}selected{% endif %}>{{ rotulo }}</option>{% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-outline-success w-100">Filtrar</button></div>
+</form>
+
+<div class="table-responsive">
+<table class="table table-hover bg-white shadow-sm align-middle">
+    <thead class="table-light">
+        <tr><th>Data</th><th>Tipo</th><th>Animal</th><th>Responsável</th><th>Local</th><th>Custo</th><th>Situação</th><th></th></tr>
+    </thead>
+    <tbody>
+    {% for a in atendimentos %}
+        <tr>
+            <td>{{ a.data|date:'d/m/Y' }}</td>
+            <td>{{ a.tipo }}</td>
+            <td>{{ a.nome_animal|default:'—' }}{% if a.especie %} <small class="text-muted">({{ a.especie }})</small>{% endif %}</td>
+            <td>{{ a.responsavel|default:'—' }}{% if a.contato %}<br><small class="text-muted">{{ a.contato }}</small>{% endif %}</td>
+            <td>{{ a.local|default:'—' }}</td>
+            <td>{% if a.custo is not None %}R$ {{ a.custo|floatformat:2 }}{% else %}—{% endif %}</td>
+            <td><span class="badge {% if a.situacao == 'Concluído' %}bg-secondary{% else %}bg-info text-dark{% endif %}">{{ a.situacao }}</span></td>
+            <td class="text-nowrap">
+                <a href="{% url 'atendimento_editar' a.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                <a href="{% url 'atendimento_excluir' a.pk %}" class="btn btn-sm btn-outline-danger">Excluir</a>
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="8" class="text-muted">Nenhum atendimento encontrado.</td></tr>
+    {% endfor %}
+    </tbody>
+    {% if atendimentos %}
+    <tfoot><tr><td colspan="5" class="text-end"><strong>Total</strong></td><td colspan="3"><strong>R$ {{ total_custo|floatformat:2 }}</strong></td></tr></tfoot>
+    {% endif %}
+</table>
+</div>
+{% endblock %}
